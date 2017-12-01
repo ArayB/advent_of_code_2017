@@ -8,7 +8,7 @@ module DayOne
 
     def run
       pairs = @arr.each_with_index.map { |val, index| [val, @arr[compare_index(index)]] }
-      pairs.select { |pair| pair[0] == pair[1] }.flatten.sum / 2
+      pairs.select { |first, last| first == last }.flatten.sum / 2
     end
 
     private
