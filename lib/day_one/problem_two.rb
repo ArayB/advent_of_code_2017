@@ -4,8 +4,6 @@ module DayOne
       @arr = input.split('').map { |val| val.to_i }
       @arr_length = @arr.length
       @step = input.length / 2
-      @pairs = []
-      @matches = []
     end
 
     def run
