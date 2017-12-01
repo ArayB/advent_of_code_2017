@@ -1,5 +1,5 @@
 require 'rspec'
-require_relative '../lib/day_one/problem_one.rb'
+require_relative '../../lib/day_one/problem_one.rb'
 
 RSpec.describe DayOne::Problem1 do
   describe '#run' do
@@ -10,7 +10,7 @@ RSpec.describe DayOne::Problem1 do
       ['1234', 0],
       ['91212129', 9]
     ].each do |input, sum|
-      it 'returns correctly' do
+      it "returns correctly for #{input}" do
         @input = input
         expect(subject).to eq(sum)
       end
