@@ -11,17 +11,11 @@ module DayOne
     end
 
     def process(arr, last = nil)
-      # puts "=========================================="
-      # puts "=========================================="
-      # puts "=========================================="
-      # puts "arr: #{arr}"
-      # puts "last: #{last}"
-
       head, *tail = arr
       if head == last
         @matches << head
       end
-      # puts "matches: #{@matches}"
+
       return process(tail, head) unless tail.length.zero?
       @matches << @arr.last if @arr.last == @arr.first
     end
