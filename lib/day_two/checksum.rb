@@ -10,7 +10,7 @@ module DayTwo
     end
 
     def evenly_divisible_values
-      9
+      @row_values.map { |row| row.combination(2).map { |x| x.sort }.select { |x, y| y % x == 0 }.flatten }.map { |x, y| y / x }.sum
     end
   end
 end

@@ -16,6 +16,17 @@ RSpec.describe DayTwo::Checksum do
 
   describe '#evenly_divisible_values' do
     it 'returns correctly' do
+      input = "5 9 2 8"
+
+      expect(DayTwo::Checksum.new(input).evenly_divisible_values).to eq(4)
+    end
+
+    it 'returns correctly' do
+      input = "9 4 7 3"
+      expect(DayTwo::Checksum.new(input).evenly_divisible_values).to eq(3)
+    end
+
+    it 'returns correctly' do
       input = <<~EOS
         5 9 2 8
         9 4 7 3
