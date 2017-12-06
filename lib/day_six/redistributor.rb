@@ -6,6 +6,19 @@ module DaySix
     end
 
     def part_one
+      process
+      @outcomes.length
+    end
+
+    def part_two
+      process
+      index = @outcomes.index(@blocks)
+      @outcomes.length - index
+    end
+
+    private
+
+    def process
       until @outcomes.include?(@blocks) do
         @outcomes << @blocks.dup
         redist_val = @blocks.max
@@ -13,17 +26,15 @@ module DaySix
         @blocks[redist_index] = 0
         redistribute(redist_index, redist_val)
       end
-      @outcomes.length
     end
 
-    private
-
-    def redistribute(prev_index, value)
-      length = @blocks.length
-      next_index = prev_index == length - 1 ? 0 : prev_index + 1
-      @blocks[next_index] += 1
-      value -= 1
-      redistribute(next_index, value) unless value == 0
+    def redistribute(index, value)
+      value.times do |x|
+        shift = x + 1
+        @blocks = @blocks.rotate(shift)
+        @blocks[index] += 1
+        @blocks = @blocks.rotate(-shift)
+      end
     end
   end
 end
