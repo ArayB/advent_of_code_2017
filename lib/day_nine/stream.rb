@@ -22,7 +22,7 @@ module DayNine
     private
 
     def process
-      @stream.each_with_index do |char, i|
+      @stream.each do |char|
         if @negated
           @negated = false
           next
