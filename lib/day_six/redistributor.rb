@@ -29,12 +29,14 @@ module DaySix
     end
 
     def redistribute(index, value)
-      value.times do |x|
-        shift = x + 1
-        @blocks = @blocks.rotate(shift)
+      temp_value = value
+      while temp_value > 0 do
+        @blocks = @blocks.rotate(1)
         @blocks[index] += 1
-        @blocks = @blocks.rotate(-shift)
+        temp_value -= 1
       end
+
+      @blocks = @blocks.rotate(-value)
     end
   end
 end
