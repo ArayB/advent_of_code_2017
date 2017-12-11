@@ -1,41 +1,59 @@
 module DayEleven
   class Hex
     def initialize(input)
-      @steps = input.split(',')
-      @position = [0,0]
+      @steps = input.chomp.split(',')
+      @position = [0,0,0]
     end
 
     def part_one
       @steps.each do |step|
-        # puts step
         case step
-        when 'ne'
-          adjust_position([1,1])
-        when 'nw'
-          adjust_position([-1,1])
         when 'n'
-          adjust_position([0,1])
-        when 'sw'
-          adjust_position([-1,-1])
-        when 'se'
-          adjust_position([1,-1])
+          adjust_position([0,1,-1])
+        when 'ne'
+          adjust_position([1,0,-1])
+        when 'nw'
+          adjust_position([-1,1,0])
         when 's'
-          adjust_position([0,-1])
-        else
-          puts @position.to_s
-          puts 'hmmmmmm'
+          adjust_position([0,-1,1])
+        when 'se'
+          adjust_position([1,-1,0])
+        when 'sw'
+          adjust_position([-1,0,1])
         end
-
       end
 
-      puts @position.to_s
       return @position.map{ |x| x.abs }.max
+    end
+
+    def part_two
+      distances = []
+      @steps.each do |step|
+        case step
+        when 'n'
+          adjust_position([0,1,-1])
+        when 'ne'
+          adjust_position([1,0,-1])
+        when 'nw'
+          adjust_position([-1,1,0])
+        when 's'
+          adjust_position([0,-1,1])
+        when 'se'
+          adjust_position([1,-1,0])
+        when 'sw'
+          adjust_position([-1,0,1])
+        end
+
+        distances << @position.map{ |x| x.abs }.max
+      end
+
+      distances.max
     end
 
     private
 
     def adjust_position(vector)
-      @position = [@position.first + vector.first, @position.last + vector.last]
+      @position = [@position.first + vector.first, @position[1] + vector[1], @position.last + vector.last]
     end
   end
 end

@@ -25,7 +25,7 @@ RSpec.describe DayEleven::Hex do
 
     it 'solves' do
       input = File.read('spec/day_eleven/input.txt')
-      expect(DayEleven::Hex.new(input).part_one).to eq(3)
+      expect(DayEleven::Hex.new(input).part_one).to eq(794)
     end
   end
 end
