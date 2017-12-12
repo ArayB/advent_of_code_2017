@@ -1,4 +1,48 @@
 module DaySeven
+  class Program
+    attr_accessor :name, :weight, :holding
+
+    def initialize(program_arr, all_programs_arr)
+      @name = program_arr[0]
+      @weight = program_arr[1].to_i
+
+      if program_arr[2]
+        @holding = []
+        holding_arr = program_arr[2]
+        holding_arr.each do |held|
+          program_arr = all_programs_arr.select{ |p| p[0] == held }.first
+
+          @holding << Program.new(program_arr, all_programs_arr)
+        end
+      end
+    end
+
+    def holding_weight
+      return 0 unless @holding
+      @holding.map{ |held| held.total_weight }.sum
+    end
+
+    def total_weight
+      @weight + holding_weight
+    end
+
+    def balance_to(desired_weight)
+      diff = desired_weight - total_weight
+
+      return weight + diff if @holding.nil?
+
+      held_weights = @holding.map{ |held| held.total_weight }
+      if held_weights.uniq.length == 1
+        weight + diff
+      else
+        unbalanced_total = held_weights.group_by(&:itself).map { |k, v| [k, v.length] }.select{ |x| x[1] == 1 }.first[0]
+        held_weights.delete_at(held_weights.index(unbalanced_total))
+        balanced_total = held_weights.first
+        @holding.select{ |p| p.total_weight == unbalanced_total }.first.balance_to(balanced_total)
+      end
+    end
+  end
+
   class Towers
     def initialize(input)
       @lines = input.split("\n")
@@ -9,39 +53,33 @@ module DaySeven
     end
 
     def part_two
-      programs = []
+      program_arrs = []
       @lines.each do |line|
+        program = []
         parts = line.split('->')
         program_string = parts.first.gsub('(', '').gsub(')', '').split(' ')
-        program_hash = { name: program_string[0], weight: program_string[1].to_i }
+
+        program[0] = program_string[0]
+        program[1] = program_string[1].to_i
         if parts.length > 1
-          program_hash[:holding] = parts.last.gsub(' ', '').split(',').flatten
+          program[2] = parts.last.gsub(' ', '').split(',').flatten
         end
-        programs << program_hash
+        program_arrs << program
       end
 
-      programs.select { |p| !p[:holding].nil? }.each do |program|
-        puts program[:name]
-        program[:holding] = program[:holding].map { |h| programs.select { |p| p[:name] == h }.first }
+      bottom_program = program_arrs.select{ |p| p[0] == bottom_program_name }.first
+      tower_bases = program_arrs.select{ |p| bottom_program[2].include?(p[0]) }
 
-        program[:total_weight] = program[:weight] + program[:holding].sum { |h| h[:weight] }
+      programs = []
+      tower_bases.each do |base|
+        programs << Program.new(base, program_arrs)
       end
 
-      total_weights = programs.select{ |p| p[:name] != bottom_program_name }.map { |p| p[:total_weight] }.compact
-      puts total_weights.to_s
-
-      unbalanced_total = total_weights.group_by(&:itself).map { |k, v| [k, v.length] }.select{ |x| x[1] == 1 }.first[0]
-      balanced_total = total_weights.uniq.select { |w| w != unbalanced_total }.first
-      puts "balanced_total: #{balanced_total}"
-      puts "unbalanced_total: #{unbalanced_total}"
-
-      unbalanced_program = programs.select{ |p| p[:total_weight] == unbalanced_total }.first
-      puts unbalanced_program
-
-      # check all held are same weight
-      # if not calculate what new value should be
-
-      # if all held are same weight calculate new program weight
+      weights = programs.map { |p| p.total_weight }
+      unbalanced_total = weights.group_by(&:itself).map { |k, v| [k, v.length] }.select{ |x| x[1] == 1 }.first[0]
+      weights.delete_at(weights.index(unbalanced_total))
+      balanced_total = weights.first
+      programs.select{ |p| p.total_weight == unbalanced_total }.first.balance_to(balanced_total)
     end
 
     private
